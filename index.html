@@ -57,7 +57,7 @@ button:disabled { background: #aaa; cursor: not-allowed; }
 }
 .card {
   perspective: 1600px;
-  height: 480px;
+  height: 560px;
   cursor: pointer;
 }
 .card-inner {
@@ -82,7 +82,7 @@ button:disabled { background: #aaa; cursor: not-allowed; }
   margin: 0 0 10px; letter-spacing: 0.15em; color: var(--accent);
   font-family: "Songti TC", serif;
 }
-.card-text { font-size: 0.93rem; text-align: justify; }
+.card-text { font-size: 1.02rem; text-align: justify; line-height: 1.8; }
 .card.selected .card-face {
   border: 2px solid var(--accent); background: #fff5e0;
 }
@@ -95,31 +95,36 @@ button:disabled { background: #aaa; cursor: not-allowed; }
 .badge.is-mill { background: var(--green); color: #fff; }
 .badge.not-mill { background: #b03a3a; color: #fff; }
 .card-back h3 {
-  font-size: 1rem; margin: 0 0 6px; color: var(--accent);
+  font-size: 1.1rem; margin: 14px 0 8px; color: var(--accent);
   border-bottom: 1px solid var(--border); padding-bottom: 4px;
 }
-.card-back h4 { font-size: 0.9rem; margin: 10px 0 4px; }
-.card-back p, .card-back ul { font-size: 0.82rem; margin: 6px 0; }
-.card-back ul { padding-left: 18px; }
+.card-back h3:first-of-type { margin-top: 8px; }
+.card-back h4 { font-size: 1rem; margin: 12px 0 6px; }
+.card-back p, .card-back ul { font-size: 0.95rem; margin: 8px 0; line-height: 1.7; }
+.card-back ul { padding-left: 20px; }
+.card-back li { margin: 4px 0; }
 .card-back blockquote {
-  margin: 6px 0; padding: 6px 10px;
+  margin: 8px 0; padding: 8px 12px;
   border-left: 3px solid var(--accent);
   background: rgba(139,58,47,0.06);
-  font-style: italic; font-size: 0.8rem;
+  font-style: italic; font-size: 0.92rem; line-height: 1.65;
 }
 .card-back blockquote.zh { font-style: normal; }
-.card-back .citation { font-size: 0.72rem; color: var(--muted); text-align: right; }
-.card-back table { width: 100%; font-size: 0.78rem; border-collapse: collapse; margin: 6px 0; }
-.card-back td, .card-back th { padding: 4px 6px; border: 1px solid var(--border); }
+.card-back .citation { font-size: 0.82rem; color: var(--muted); }
+.card-back table { width: 100%; font-size: 0.9rem; border-collapse: collapse; margin: 8px 0; }
+.card-back td, .card-back th { padding: 6px 8px; border: 1px solid var(--border); }
 .flip-hint {
   text-align: center; font-size: 0.75rem; color: var(--muted);
   margin-top: 8px; opacity: 0.6;
 }
 @media (max-width: 600px) {
   body { padding: 12px 8px; }
-  .card { height: 520px; }
+  .card { height: 620px; }
   .cards { gap: 16px; }
   h1 { font-size: 1.4rem; }
+  .card-text { font-size: 1.05rem; }
+  .card-back p, .card-back ul { font-size: 1rem; }
+  .card-back blockquote { font-size: 0.95rem; }
 }
 </style>
 </head>
