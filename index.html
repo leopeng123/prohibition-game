@@ -22,6 +22,18 @@ body {
   color: var(--ink);
   font-family: "Noto Serif TC", "Songti TC", "PingFang TC", serif;
   line-height: 1.7;
+  position: relative;
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url('bg.jpg') center top / cover no-repeat;
+  filter: sepia(0.75) brightness(0.92) contrast(1.05);
+  opacity: 0.24;
+  z-index: -1;
+  pointer-events: none;
 }
 header { max-width: 900px; margin: 0 auto 24px; text-align: center; }
 h1 { font-size: 1.7rem; margin: 0 0 6px; letter-spacing: 0.08em; }
@@ -241,7 +253,7 @@ const cards = [
 <h3>19 世紀的實際影響</h3>
 <p>這套思路落實成了英國的新濟貧法（1834）、Edwin Chadwick 主導的衛生改革（1842 年報告、1848 年公共衛生法）。</p>
 <h3>為什麼不是彌爾？彌爾自己不也是功利主義者嗎？</h3>
-<p><strong>這正是這張卡的隱藏內梗。</strong>彌爾的父親 James Mill 是邊沁最親近的弟子之一，彌爾從小被當成「下一代功利主義領袖」培養。</p>
+<p>彌爾的父親 James Mill 是邊沁最親近的弟子之一，彌爾從小被當成「下一代功利主義領袖」培養。</p>
 <p>但《論自由》整本書——特別是第一章——就是要跟邊沁這套「總體幸福可以壓過個人」的推論<strong>劃清界線</strong>。彌爾在第一章寫下著名的「害他原則」：</p>
 <blockquote>The sole end for which mankind are warranted, individually or collectively, in interfering with the liberty of action of any of their number, is self-protection. His own good, either physical or moral, is not a sufficient warrant.</blockquote>
 <blockquote class="zh">人類個別或集體可以干涉某人行動自由的唯一目的，就是自衛。當事人自己的利益——無論身體上的或道德上的——都不是足夠的理由。</blockquote>
