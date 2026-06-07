@@ -30,14 +30,21 @@ body::before {
   position: fixed;
   inset: 0;
   background: url('bg.jpg') center center / cover no-repeat;
-  filter: brightness(0.95) saturate(0.85);
-  opacity: 0.55;
+  filter: brightness(1) saturate(1.25);
+  opacity: 0.72;
   z-index: -1;
   pointer-events: none;
 }
 header { max-width: 900px; margin: 0 auto 24px; text-align: center; }
 h1 { font-size: 1.7rem; margin: 0 0 6px; letter-spacing: 0.08em; }
-.subtitle { color: var(--muted); font-size: 0.9rem; font-style: italic; }
+.subtitle {
+  color: var(--ink); font-size: 0.9rem; font-style: italic;
+  background: rgba(245, 236, 217, 0.9);
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 16px;
+  margin-top: 6px;
+}
 .intro {
   max-width: 720px; margin: 0 auto 24px;
   background: var(--paper); border: 1px solid var(--border);
@@ -58,8 +65,12 @@ button:disabled { background: #aaa; cursor: not-allowed; }
 .result.correct { border-left-color: var(--green); }
 .result h2 { margin: 0 0 6px; font-size: 1.1rem; }
 .locked-msg {
-  max-width: 720px; margin: 0 auto 24px; text-align: center;
-  color: var(--muted); font-size: 0.88rem;
+  margin: 0 auto 24px; text-align: center;
+  color: var(--ink); font-size: 0.88rem;
+  background: rgba(245, 236, 217, 0.9);
+  padding: 6px 18px;
+  border-radius: 16px;
+  width: fit-content;
 }
 .cards {
   max-width: 1200px; margin: 0 auto;
