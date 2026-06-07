@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>禁酒令辯論：哪一個是彌爾？</title>
+<style>
+:root {
+  --paper: #f5ecd9;
+  --paper-light: #faf3e0;
+  --ink: #2a1f14;
+  --accent: #8b3a2f;
+  --green: #4a7c3a;
+  --border: #c4a878;
+  --muted: #6b5a3f;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px;
+  background: #ede4cf;
+  color: var(--ink);
+  font-family: "Noto Serif TC", "Songti TC", "PingFang TC", serif;
+  line-height: 1.7;
+}
+header { max-width: 900px; margin: 0 auto 24px; text-align: center; }
+h1 { font-size: 1.7rem; margin: 0 0 6px; letter-spacing: 0.08em; }
+.subtitle { color: var(--muted); font-size: 0.9rem; font-style: italic; }
+.intro {
+  max-width: 720px; margin: 0 auto 24px;
+  background: var(--paper); border: 1px solid var(--border);
+  padding: 18px 24px; border-radius: 4px; font-size: 0.95rem;
+}
+.controls { max-width: 720px; margin: 0 auto 16px; text-align: center; }
+button {
+  font-family: inherit; font-size: 1rem; padding: 10px 28px;
+  background: var(--accent); color: var(--paper-light); border: none;
+  border-radius: 3px; cursor: pointer; letter-spacing: 0.08em;
+}
+button:disabled { background: #aaa; cursor: not-allowed; }
+.result {
+  max-width: 720px; margin: 0 auto 16px; padding: 14px 22px;
+  background: var(--paper); border-left: 4px solid var(--accent); display: none;
+}
+.result.show { display: block; }
+.result.correct { border-left-color: var(--green); }
+.result h2 { margin: 0 0 6px; font-size: 1.1rem; }
+.locked-msg {
+  max-width: 720px; margin: 0 auto 24px; text-align: center;
+  color: var(--muted); font-size: 0.88rem;
+}
+.cards {
+  max-width: 1200px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 22px;
+}
+.card {
+  perspective: 1600px;
+  height: 480px;
+  cursor: pointer;
+}
+.card-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(.7,.1,.3,1);
+}
+.card.flipped .card-inner { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px 22px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  overflow-y: auto;
+}
+.card-back { transform: rotateY(180deg); background: var(--paper-light); }
+.card-label {
+  font-size: 2.2rem; font-weight: bold; text-align: center;
+  margin: 0 0 10px; letter-spacing: 0.15em; color: var(--accent);
+  font-family: "Songti TC", serif;
+}
+.card-text { font-size: 0.93rem; text-align: justify; }
+.card.selected .card-face {
+  border: 2px solid var(--accent); background: #fff5e0;
+}
+.card.correct-card .card-front { border: 2px solid var(--green); }
+.card.wrong-pick .card-front { border: 2px solid #b03a3a; }
+.badge {
+  display: inline-block; padding: 3px 12px; border-radius: 12px;
+  font-size: 0.8rem; margin-bottom: 10px; letter-spacing: 0.05em;
+}
+.badge.is-mill { background: var(--green); color: #fff; }
+.badge.not-mill { background: #b03a3a; color: #fff; }
+.card-back h3 {
+  font-size: 1rem; margin: 0 0 6px; color: var(--accent);
+  border-bottom: 1px solid var(--border); padding-bottom: 4px;
+}
+.card-back h4 { font-size: 0.9rem; margin: 10px 0 4px; }
+.card-back p, .card-back ul { font-size: 0.82rem; margin: 6px 0; }
+.card-back ul { padding-left: 18px; }
+.card-back blockquote {
+  margin: 6px 0; padding: 6px 10px;
+  border-left: 3px solid var(--accent);
+  background: rgba(139,58,47,0.06);
+  font-style: italic; font-size: 0.8rem;
+}
+.card-back blockquote.zh { font-style: normal; }
+.card-back .citation { font-size: 0.72rem; color: var(--muted); text-align: right; }
+.card-back table { width: 100%; font-size: 0.78rem; border-collapse: collapse; margin: 6px 0; }
+.card-back td, .card-back th { padding: 4px 6px; border: 1px solid var(--border); }
+.flip-hint {
+  text-align: center; font-size: 0.75rem; color: var(--muted);
+  margin-top: 8px; opacity: 0.6;
+}
+@media (max-width: 600px) {
+  body { padding: 12px 8px; }
+  .card { height: 520px; }
+  .cards { gap: 16px; }
+  h1 { font-size: 1.4rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>禁酒令辯論：哪一個是彌爾？</h1>
+  <p class="subtitle">1859・倫敦・《論自由》出版前夕</p>
+</header>
+
+<div class="intro">
+以下六段論述，是 19 世紀英倫對禁酒令的不同立場。其中<strong>恰有一段</strong>是《論自由》作者彌爾本人的主張。請仔細閱讀，選出你認為是彌爾的那一張，按「確認答案」。
+<br><br>
+答題後即可點擊任一卡片翻面，查看真正的立場、代表人物與《論自由》原文出處。
+</div>
+
+<div class="controls">
+  <button id="confirm-btn" disabled>請先選擇一張卡片</button>
+</div>
+
+<div class="result" id="result"></div>
+<div class="locked-msg" id="locked-msg">答題後可點擊卡片翻面</div>
+
+<div class="cards" id="cards"></div>
+
+<script>
+const cards = [
+  {
+    id: '甲', isAnswer: true,
+    front: `飲酒本身只關乎飲者自身，國家不應禁止。醉後傷人才屬國家可懲處之事；對曾經傷人之醉者，法庭可特別禁其取酒，餘人則否。至於課稅一事，若國家本須以稅收為其用度，則於酒、煙等非必需之物上課稅以足國用，是合宜的；然若課稅之意圖僅在使人飲不起，便與全面禁絕僅有程度之別，同屬不可。所謂「社會權利」要求人人皆無從接觸誘惑的說法，若推到極致，便足以正當化一切專制。`,
+    back: `
+<span class="badge is-mill">✓ 這是彌爾本人</span>
+<h3>《論自由》第四章｜論飲酒與懲罰</h3>
+<blockquote>No person ought to be punished simply for being drunk; but a soldier or a policeman should be punished for being drunk on duty.</blockquote>
+<blockquote class="zh">無人應僅因醉酒而受罰；然軍人或警員執勤時醉酒則應受罰。</blockquote>
+<h3>《論自由》第五章｜論課稅</h3>
+<blockquote>Taxation, however, of stimulants, up to the point which produces the largest amount of revenue (supposing that the State needs all the revenue which it yields) is not only admissible, but to be approved of. But to tax stimulants for the sole purpose of making them more difficult to be obtained, is a measure differing only in degree from their entire prohibition.</blockquote>
+<blockquote class="zh">對刺激性飲品課稅，課至稅收極大之點──若國家確需此項稅收──不僅可為，且應贊成；然若課稅之唯一目的乃在使人難以取得，則此措施與全面禁絕僅有程度之別。</blockquote>
+<h4>彌爾立場的三個簽名特徵</h4>
+<ul>
+<li>自愛 / 害他二分</li>
+<li>對「社會權利」論證的駁斥（見卡片丙）</li>
+<li>課稅二分：為國庫可，為禁絕不可</li>
+</ul>`
+  },
+  {
+    id: '乙', isAnswer: false,
+    front: `酒乃魔鬼伸入人世的手。它毒害身體、腐蝕靈魂、瓦解家庭。基督徒當立誓終身滴酒不沾，並以禱告與見證引領沉淪者悔改。法律或可助一臂之力，但真正的勝利在每一個個人的內心。`,
+    back: `
+<span class="badge not-mill">✗ 立誓派／宗教禁酒運動</span>
+<p>1830–40 年代興起的全面戒酒（teetotal）運動。訴諸<strong>個人良知與信仰承諾</strong>，而非國家強制。</p>
+<h4>代表人物</h4>
+<ul>
+<li><strong>Father Theobald Mathew（1790–1856）</strong>：愛爾蘭嘉布遣會修士。1838 年起在愛爾蘭推動全面戒酒誓約，十年內 <strong>500 萬人</strong>立誓滴酒不沾；後在英、蘇、美再增數十萬人。</li>
+<li><strong>Joseph Livesey（1794–1884）</strong>：英國蘭開夏新教徒，1832 年發起 Preston Pledge；「teetotal」一詞由此而生。</li>
+<li><strong>American Temperance Society（1826）</strong>：新教福音派發起，1830 年代擴至百萬人規模。</li>
+</ul>
+<h4>跟彌爾的差異</h4>
+<p>彌爾不反對個人立誓戒酒，但反對把這當成普遍道德要求加諸他人。立誓派訴諸宗教，彌爾訴諸自由原則。</p>`
+  },
+  {
+    id: '丙', isAnswer: false,
+    front: `既已證明酒乃公害──使家中婦孺挨餓、街道失序、監獄充塞──國家便有義務全面禁止其製造與販賣。緬因州已立此先例，英格蘭沒有理由再讓酒商以他人之不幸為業。徹底禁絕，是唯一之路。`,
+    back: `
+<span class="badge not-mill">✗ 強硬禁酒派</span>
+<h4>代表事件與組織</h4>
+<ul>
+<li><strong>Maine Law（1851）</strong>：美國緬因州在 Neal Dow（綽號「禁酒之父」）推動下通過。</li>
+<li><strong>United Kingdom Alliance（1853）</strong>：曼徹斯特成立，發起人 Nathaniel Card（貴格會棉商）。原名「全國徹底法律禁絕酗酒聯盟」。</li>
+</ul>
+<h3>彌爾在《論自由》第四章直接駁斥</h3>
+<p>他引用 UK Alliance 秘書信中提出的「社會權利」論證，然後反擊：</p>
+<blockquote>A theory of "social rights," the like of which probably never before found its way into distinct language—being nothing short of this—that it is the absolute social right of every individual, that every other individual shall act in every respect exactly as he ought.</blockquote>
+<blockquote class="zh">這一套「社會權利」理論主張：每一個體擁有絕對之社會權利，要求其他個體在一切事情上的行為皆如其所應為。</blockquote>
+<blockquote>So monstrous a principle is far more dangerous than any single interference with liberty; there is no violation of liberty which it would not justify.</blockquote>
+<blockquote class="zh">這條荒謬的原則比任何單一的自由侵犯更危險；沒有一種自由侵犯是它無法正當化的。</blockquote>`
+  },
+  {
+    id: '丁', isAnswer: false,
+    front: `酒館乃英格蘭千年之風俗，工人勞作一日，下班於爐火邊飲一杯麥酒，何過之有？這群道德改革家整日盯著別人的杯中物，自己倒不肯先看看自家爐邊的擺酒櫃。讓人民享其素來之自由便是。`,
+    back: `
+<span class="badge not-mill">✗ 保守派／工人酒館擁護者</span>
+<p>19 世紀英國政治分野清楚：<strong>自由黨偏禁酒，保守黨護酒業</strong>。</p>
+<h4>代表論述</h4>
+<ul>
+<li>某位前首相曾稱赴酒館為「<em>英國子民古老不可剝奪的權利</em>」。</li>
+<li><strong>William Cobbett（1763–1835）</strong>：記者、政論家，1820–30 年代強烈為工人麥酒權辯護。</li>
+<li><strong>階級論證</strong>：中產階級住宅暖和舒適，工人下班只有酒館可去；禁酒是中產對工人的階級攻擊。</li>
+</ul>
+<h4>跟彌爾的差異</h4>
+<p>兩者都反對全面禁絕，但<strong>理據完全不同</strong>。彌爾從<strong>自由原則</strong>出發；保守派從<strong>傳統權利與階級正義</strong>出發。彌爾在《論自由》第三章甚至警告：</p>
+<blockquote>The despotism of custom is everywhere the standing hindrance to human advancement.</blockquote>
+<blockquote class="zh">習俗的專制無所不在，是人類進步的恆常障礙。</blockquote>`
+  },
+  {
+    id: '戊', isAnswer: false,
+    front: `若以總體苦樂計，酒類所致之疾病、貧困、犯罪與勞動力損失，遠超其所提供之短暫歡愉。國家既以增進最大多數人之幸福為職志，自當以立法限縮其銷售，縱使部分個人偏好因此受限，亦在所不惜。`,
+    back: `
+<span class="badge not-mill">✗ 邊沁式家長功利主義</span>
+<h4>核心思想家</h4>
+<ul>
+<li><strong>Jeremy Bentham（1748–1832）</strong>：「最大多數人最大幸福」原則的提出者。</li>
+</ul>
+<h4>19 世紀落地</h4>
+<p>新濟貧法（1834）、Edwin Chadwick 衛生改革（1842 報告、1848 公共衛生法）。</p>
+<h3>隱藏的內梗</h3>
+<p>彌爾自己就是功利主義者，他的父親 James Mill 是邊沁最親近的弟子。《論自由》整本書──特別是第一章──正是要跟邊沁這套劃清界線：</p>
+<blockquote>The sole end for which mankind are warranted, individually or collectively, in interfering with the liberty of action of any of their number, is self-protection. His own good, either physical or moral, is not a sufficient warrant.</blockquote>
+<blockquote class="zh">人類得以干涉他人行動自由的唯一目的，是自衛。當事人自身的利益──無論身體上的或道德上的──皆不足以構成充分依據。</blockquote>
+<p class="citation">這是「害他原則（harm principle）」的經典表述。</p>`
+  },
+  {
+    id: '己', isAnswer: false,
+    front: `完全禁絕既不切實際，亦適得其反──只會逼出私釀與走私。明智之道在於管制：課以重稅、限制營業時辰、規範酒精濃度、強制酒商登記。此種制度既能抑制過量，又不剝奪節制飲者之自由。`,
+    back: `
+<span class="badge not-mill">✗ 自由派管制改革路線</span>
+<p>1850–60 年代英國對先前過度自由化的修正聲音。</p>
+<h4>歷史背景</h4>
+<ul>
+<li><strong>Beerhouse Act 1830</strong>：徹底放鬆釀酒販酒管制，酒價腰斬、酒館爆增──「過度自由化」典型案例。</li>
+<li><strong>管制派處方</strong>：恢復牌照權、加重稅、限制營業時間、規範酒精濃度。</li>
+<li>最終體現於 <strong>Wine and Beerhouse Acts 1869–1870</strong>。</li>
+</ul>
+<h3>跟彌爾的關鍵差異──課稅的目的</h3>
+<blockquote>The limitation in number, for instance, of beer and spirit houses, for the express purpose of rendering them more difficult of access... is justifiable only on the score that it is necessary to prevent infractions of the public peace.</blockquote>
+<blockquote class="zh">以減少誘惑機會為由限制啤酒館與烈酒館數量，僅在為防止公共秩序受擾時為正當。</blockquote>
+<table>
+<tr><th></th><th>課稅</th><th>為了什麼</th></tr>
+<tr><td>彌爾（甲）</td><td>接受</td><td>國庫收入 / 防公共秩序</td></tr>
+<tr><td>管制派（己）</td><td>接受</td><td>抑制飲酒</td></tr>
+</table>
+<p><strong>這是六張卡片中最容易跟彌爾搞混的一張。</strong></p>`
+  }
+];
+
+let selectedId = null;
+let answered = false;
+const cardsEl = document.getElementById('cards');
+const confirmBtn = document.getElementById('confirm-btn');
+const resultEl = document.getElementById('result');
+
+function render() {
+  cardsEl.innerHTML = '';
+  cards.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.dataset.id = c.id;
+    if (selectedId === c.id) div.classList.add('selected');
+    if (answered) {
+      if (c.isAnswer) div.classList.add('correct-card');
+      if (selectedId === c.id && !c.isAnswer) div.classList.add('wrong-pick');
+    }
+    div.innerHTML = `
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <div class="card-label">${c.id}</div>
+          <div class="card-text">${c.front}</div>
+          ${answered ? '<div class="flip-hint">點擊卡片翻面</div>' : ''}
+        </div>
+        <div class="card-face card-back">
+          ${c.back}
+        </div>
+      </div>
+    `;
+    div.addEventListener('click', () => handleCardClick(c.id));
+    cardsEl.appendChild(div);
+  });
+}
+
+function handleCardClick(id) {
+  if (!answered) {
+    selectedId = id;
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = `確認選擇 ${id}`;
+    render();
+  } else {
+    const cardEl = cardsEl.querySelector(`[data-id="${id}"]`);
+    cardEl.classList.toggle('flipped');
+  }
+}
+
+confirmBtn.addEventListener('click', () => {
+  if (!selectedId || answered) return;
+  answered = true;
+  const picked = cards.find(c => c.id === selectedId);
+  const correct = picked.isAnswer;
+  resultEl.className = 'result show' + (correct ? ' correct' : '');
+  resultEl.innerHTML = correct
+    ? `<h2>答對了！</h2><p>你選的「${selectedId}」確實是彌爾本人的立場。點擊任一卡片翻面查看詳細解析。</p>`
+    : `<h2>不是這一張。</h2><p>你選的「${selectedId}」不是彌爾的立場。正確答案是「甲」。點擊任一卡片翻面查看詳細解析。</p>`;
+  confirmBtn.style.display = 'none';
+  document.getElementById('locked-msg').textContent = '點擊任一卡片可翻面查看';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+render();
+</script>
+
+</body>
+</html>
